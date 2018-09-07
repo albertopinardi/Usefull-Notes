@@ -4,8 +4,8 @@ Kubernetes Usefull Notes
 Simple Application
 ----------
 
-### Creation
-
+Creation
+#########
 
 Create, via Deployment, a replica set of webserver exposed via service and ingress
 
@@ -44,9 +44,10 @@ So now we have 3 nginx running with the 80 port opened at container level only.
 
 **Note:** The deployments automatically create a replicaset that manage to mantain the desired replica number
 
-### Exposing via Service
+Exposing via Service
+########
 
-For expose the application we have to create e service (svc) that expose the POD (container) port to a (Casually extracted) Static NodePort 
+For expose the application we have to create e service (svc) that expose the POD (container) port to a (Casually extracted) Static NodePort
 
     kubectl create -f webserver-svc.yaml
 
