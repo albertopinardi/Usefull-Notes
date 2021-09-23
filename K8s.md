@@ -72,3 +72,49 @@ Example of webserver-svc.yaml
 Create a secret to pull image from a private docker registry
 
     kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+
+## CheatSheet
+
+### kubectl
+
+```kubectl
+kubectl drain <node-name> --ignore-daemonsets --grace-period 0 --force --delete-emptydir-data --ignore-errors
+
+kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=<node-name>
+
+kubectl config set-context --current --namespace=<namespace>
+kubectl config use-context <context-name>
+```
+
+### eksctl
+
+```
+eksctl upgrade cluster --name <cluster-name>
+eksctl upgrade cluster --name <cluster-name> --approve
+```
+Edit <cluster-name>.yaml:
+
+* update version
+* update nodeGroup name
+
+```yaml
+# ...
+metadata:
+  version: '1.20'
+# ...
+nodeGroups:
+  - name: nodegroupName-v20
+# ...
+```
+
+Create new nodegroup, cordon and drain the old, delete the old
+
+```
+eksctl create nodegroup --include=nodegroupName-v20 -f <cluster-name>.yaml
+kubectl drain <node-name> --ignore-daemonsets --grace-period 0 --force --delete-emptydir-data --ignore-errors
+```
+
+```eksctl
+eksctl scale nodegroup --name <nodegroup-name> --nodes-min 1 --nodes-max 3 --nodes 2 --cluster <cluster-name>
+eksctl create nodegroup --include=<nodegroup-name> -f kubeflow-ai.yaml
+```
